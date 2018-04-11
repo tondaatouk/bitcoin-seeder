@@ -1,0 +1,19 @@
+# /etc/systemd/system/buzzdnsseed.service
+
+[Unit]
+Description=buzzcoin dns seed service - mainnet
+After=network.target
+
+[Service]
+ExecStart=/home/buzzseed/buzzcoin-seeder/dnsseed -h dnsseed.buzzcoin.info -n seedserver.buzzcoin.info -m teambuzz.buzzcoin.info -t 32
+WorkingDirectory=/home/buzzseed/buzzcoin-seeder/dnsseed-mainnet
+KillMode=process
+Restart=always
+## security
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=full
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
