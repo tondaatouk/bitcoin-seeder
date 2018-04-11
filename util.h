@@ -3,7 +3,7 @@
 
 #include <pthread.h>
 #include <errno.h>
-#include <openssl/sha.h>
+#include "openssl/sha.h"
 #include <stdarg.h>
 
 #include "uint256.h"

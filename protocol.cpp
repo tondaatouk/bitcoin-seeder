@@ -22,7 +22,7 @@ static const char* ppszTypeName[] =
     "block",
 };
 
-unsigned char pchMessageStart[4] = { 0xf9, 0xbe, 0xb4, 0xd9 };
+unsigned char pchMessageStart[4] = { 0x07, 0x35, 0x82, 0x05 };
 
 CMessageHeader::CMessageHeader()
 {
@@ -52,8 +52,10 @@ std::string CMessageHeader::GetCommand() const
 bool CMessageHeader::IsValid() const
 {
     // Check start string
-    if (memcmp(pchMessageStart, ::pchMessageStart, sizeof(pchMessageStart)) != 0)
+    if (memcmp(pchMessageStart, ::pchMessageStart, sizeof(pchMessageStart)) != 0) {
+        printf("CMessageHeader::IsValid() : (%s, %u bytes) pchMessageStart mismatch\n", GetCommand().c_str(), nMessageSize);
         return false;
+    }
 
     // Check the command string for errors
     for (const char* p1 = pchCommand; p1 < pchCommand + COMMAND_SIZE; p1++)

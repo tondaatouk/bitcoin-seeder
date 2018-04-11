@@ -1,5 +1,5 @@
-CXXFLAGS = -O3 -g0 -march=native
-LDFLAGS = $(CXXFLAGS)
+CXXFLAGS = -O3 -g0 -march=native -I/usr/local/opt/openssl/include
+LDFLAGS = $(CXXFLAGS) -L/usr/local/opt/openssl/lib
 
 dnsseed: dns.o bitcoin.o netbase.o protocol.o db.o main.o util.o
 	g++ -pthread $(LDFLAGS) -o dnsseed dns.o bitcoin.o netbase.o protocol.o db.o main.o util.o -lcrypto
@@ -11,3 +11,6 @@ dns.o: dns.c
 	gcc -pthread -std=c99 $(CXXFLAGS) dns.c -Wall -c -o dns.o
 
 %.o: %.cpp
+
+clean:
+	rm -f *.o dnsseed *.dat *.log *.dump

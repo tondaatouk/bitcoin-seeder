@@ -391,23 +391,21 @@ extern "C" void* ThreadStats(void*) {
       requests += dnsThread[i]->dns_opt.nRequests;
       queries += dnsThread[i]->dbQueries;
     }
-    printf("%s %i/%i available (%i tried in %is, %i new, %i active), %i banned; %llu DNS requests, %llu db queries", c, stats.nGood, stats.nAvail, stats.nTracked, stats.nAge, stats.nNew, stats.nAvail - stats.nTracked - stats.nNew, stats.nBanned, (unsigned long long)requests, (unsigned long long)queries);
+    printf("%s %i/%i available (%i tried in %is, %i new, %i active), %i banned; %llu DNS requests, %llu db queries\n", c, stats.nGood, stats.nAvail, stats.nTracked, stats.nAge, stats.nNew, stats.nAvail - stats.nTracked - stats.nNew, stats.nBanned, (unsigned long long)requests, (unsigned long long)queries);
     Sleep(1000);
   } while(1);
   return nullptr;
 }
 
-static const string mainnet_seeds[] = {"dnsseed.bluematt.me", "bitseed.xf2.org", "dnsseed.bitcoin.dashjr.org", "seed.bitcoin.sipa.be", ""};
-static const string testnet_seeds[] = {"testnet-seed.alexykot.me",
-                                       "testnet-seed.bitcoin.petertodd.org",
-                                       "testnet-seed.bluematt.me",
-                                       "testnet-seed.bitcoin.schildbach.de",
-                                       ""};
+static const string mainnet_seeds[] = {"seednode01.buzzcoin.info", "seednode02.buzzcoin.info","seednode03.buzzcoin.info", ""};
+static const string testnet_seeds[] = {""};
 static const string *seeds = mainnet_seeds;
 
 extern "C" void* ThreadSeeder(void*) {
   if (!fTestNet){
-    db.Add(CService("kjy2eqzk4zwi5zd3.onion", 8333), true);
+    db.Add(CService("seednode01.buzzcoin.info", 25128), true);
+    db.Add(CService("seednode02.buzzcoin.info", 25128), true);
+    db.Add(CService("seednode03.buzzcoin.info", 25128), true);
   }
   do {
     for (int i=0; seeds[i] != ""; i++) {
@@ -422,7 +420,7 @@ extern "C" void* ThreadSeeder(void*) {
   return nullptr;
 }
 
-int main(int argc, char **argv) {
+ int main(int argc, char **argv) {
   signal(SIGPIPE, SIG_IGN);
   setbuf(stdout, NULL);
   CDnsSeedOpts opts;
@@ -459,10 +457,10 @@ int main(int argc, char **argv) {
   bool fDNS = true;
   if (opts.fUseTestNet) {
       printf("Using testnet.\n");
-      pchMessageStart[0] = 0x0b;
-      pchMessageStart[1] = 0x11;
-      pchMessageStart[2] = 0x09;
-      pchMessageStart[3] = 0x07;
+      pchMessageStart[0] = 0x1f;
+      pchMessageStart[1] = 0x22;
+      pchMessageStart[2] = 0x05;
+      pchMessageStart[3] = 0x30;
       seeds = testnet_seeds;
       fTestNet = true;
   }
@@ -520,3 +518,4 @@ int main(int argc, char **argv) {
   pthread_join(threadDump, &res);
   return 0;
 }
+
