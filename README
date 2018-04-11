@@ -52,6 +52,7 @@ This will produce the `dnsseed` binary.
 RUNNING AS NON-ROOT
 -------------------
 
+SOLUTION 1:
 Typically, you'll need root privileges to listen to port 53 (name service).
 
 One solution is using an iptables rule (Linux only) to redirect it to
@@ -61,3 +62,8 @@ $ iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-port 5353
 
 If properly configured, this will allow you to run dnsseed in userspace, using
 the -p 5353 option.
+
+SOLUTION 2:
+Use CAP_NET_BIND_SERVICE to grant low-numbered port access to a process:
+
+$ sudo setcap CAP_NET_BIND_SERVICE=+eip /path/to/binary
